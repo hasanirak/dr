@@ -19,31 +19,53 @@
   <style>
     body {
       font-family: 'Noto Sans Arabic', sans-serif;
-      background: linear-gradient(135deg, #047857, #10b981);
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
       min-height: 100vh;
       margin: 0;
       color: #1f2937;
       transition: all 0.3s ease;
     }
     body.dark-mode {
-      background: linear-gradient(135deg, #1f2937, #4b5563);
-      color: #d1d5db;
+      background: linear-gradient(135deg, #1e293b, #475569);
+      color: #e5e7eb;
     }
     body.dark-mode .bg-white {
-      background: #374151;
+      background: #1e293b;
     }
     body.dark-mode .text-gray-800 {
-      color: #d1d5db;
+      color: #e5e7eb;
+    }
+    .container {
+      max-width: 1700px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    }
+    body.dark-mode .card {
+      background: #2d3748;
     }
     .sidebar {
-      width: 280px;
-      background: rgba(16, 185, 129, 0.95);
+      width: 300px;
+      background: rgba(31, 41, 55, 0.95);
       position: fixed;
       top: 0;
       right: 0;
       height: 100%;
       padding: 2rem;
-      box-shadow: -6px 0 16px rgba(0, 0, 0, 0.3);
+      box-shadow: -8px 0 20px rgba(0, 0, 0, 0.4);
       z-index: 1000;
       transform: translateX(100%);
       transition: transform 0.3s ease;
@@ -56,37 +78,15 @@
       top: 1.5rem;
       right: 1.5rem;
       z-index: 1100;
-      background: #10b981;
+      background: #3b82f6;
       color: #fff;
       padding: 0.75rem;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background 0.2s;
     }
     .sidebar-toggle:hover {
-      background: #059669;
-    }
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 2rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-    body.dark-mode .card {
-      background: #4b5563;
+      background: #2563eb;
     }
     .modal {
       position: fixed;
@@ -94,7 +94,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       display: none;
       align-items: center;
       justify-content: center;
@@ -105,52 +105,52 @@
     }
     .modal-content {
       background: #fff;
-      padding: 2.5rem;
-      border-radius: 16px;
-      max-width: 700px;
+      padding: 3rem;
+      border-radius: 20px;
+      max-width: 800px;
       width: 95%;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
     }
     body.dark-mode .modal-content {
-      background: #4b5563;
+      background: #2d3748;
     }
     input, select {
-      padding: 0.75rem;
+      padding: 0.85rem;
       margin: 0.5rem 0;
       width: 100%;
       border: 1px solid #d1d5db;
-      border-radius: 8px;
+      border-radius: 10px;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus, select:focus {
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
       outline: none;
     }
     body.dark-mode input, body.dark-mode select {
-      background: #6b7280;
+      background: #4b5563;
       color: #fff;
-      border-color: #9ca3af;
+      border-color: #6b7280;
     }
     button {
-      padding: 0.75rem 1.5rem;
+      padding: 0.85rem 2rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
     }
     button:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
     table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
     }
     th, td {
-      padding: 1rem;
+      padding: 1.2rem;
       text-align: right;
       border-bottom: 1px solid #e5e7eb;
     }
@@ -162,32 +162,32 @@
       z-index: 10;
     }
     body.dark-mode th {
-      background: #6b7280;
+      background: #4b5563;
     }
     tr:hover {
       background: #f3f4f6;
     }
     body.dark-mode tr:hover {
-      background: #4b5563;
+      background: #374151;
     }
     #map {
-      height: 500px;
-      border-radius: 16px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      height: 600px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
     .notification {
       position: fixed;
       top: 2rem;
       right: 2rem;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      padding: 1.2rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: none;
       animation: slideIn 0.3s ease;
     }
     .notification.success {
-      background: #10b981;
+      background: #22c55e;
       color: #fff;
     }
     .notification.error {
@@ -200,7 +200,7 @@
     }
     .notification .close {
       cursor: pointer;
-      margin-left: 1rem;
+      margin-left: 1.2rem;
       font-weight: bold;
     }
     .loading {
@@ -209,39 +209,39 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       color: #fff;
-      padding: 1.5rem;
-      border-radius: 12px;
+      padding: 2rem;
+      border-radius: 15px;
       z-index: 1000;
       animation: pulse 1.5s infinite;
     }
     .dashboard-card {
-      background: linear-gradient(135deg, #10b981, #34d399);
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
       color: #fff;
-      border-radius: 16px;
-      padding: 1.5rem;
+      border-radius: 20px;
+      padding: 2rem;
       text-align: center;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
     }
     .dashboard-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
     }
     body.dark-mode .dashboard-card {
-      background: linear-gradient(135deg, #047857, #10b981);
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
     }
     .dashboard-card .icon {
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
     .progress-bar {
-      height: 8px;
-      background: #34d399;
-      border-radius: 4px;
-      margin-top: 0.75rem;
+      height: 10px;
+      background: #60a5fa;
+      border-radius: 5px;
+      margin-top: 1rem;
       position: relative;
       overflow: hidden;
     }
@@ -249,20 +249,20 @@
       content: '';
       position: absolute;
       height: 100%;
-      background: #6ee7b7;
+      background: #93c5fd;
       width: var(--progress);
       transition: width 1s ease;
     }
     .whatsapp-btn {
       background: #25D366;
       color: #fff;
-      padding: 0.5rem;
-      border-radius: 8px;
+      padding: 0.6rem;
+      border-radius: 10px;
       transition: background 0.2s, transform 0.2s;
     }
     .whatsapp-btn:hover {
       background: #1ebe57;
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
     .general-whatsapp-btn {
       position: fixed;
@@ -270,25 +270,25 @@
       left: 2rem;
       background: #25D366;
       color: #fff;
-      padding: 1.25rem;
+      padding: 1.5rem;
       border-radius: 50%;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       transition: transform 0.3s, box-shadow 0.3s;
     }
     .general-whatsapp-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      transform: scale(1.15);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
     }
     .back-to-top {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background: #10b981;
+      background: #3b82f6;
       color: #fff;
-      padding: 1rem;
+      padding: 1.2rem;
       border-radius: 50%;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: none;
       transition: opacity 0.3s, transform 0.3s;
@@ -298,7 +298,7 @@
       opacity: 1;
     }
     .back-to-top:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
     }
     .chart-container {
       max-height: 0;
@@ -306,32 +306,55 @@
       transition: max-height 0.5s ease;
     }
     .chart-container.show {
-      max-height: 500px;
+      max-height: 600px;
     }
     .autocomplete-suggestions {
       position: absolute;
       background: #fff;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      max-height: 200px;
+      border: 1px solid #d1d5d1;
+      border-radius: 10px;
+      max-height: 250px;
       overflow-y: auto;
       z-index: 1000;
-      width: calc(100% - 1rem);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: calc(100% - 1.2rem);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     .autocomplete-suggestions div {
-      padding: 0.5rem;
+      padding: 0.6rem;
       cursor: pointer;
     }
     .autocomplete-suggestions div:hover {
       background: #f3f4f6;
     }
     body.dark-mode .autocomplete-suggestions {
-      background: #4b5563;
-      border-color: #6b7280;
+      background: #2d3748;
+      border-color: #4b5563;
     }
     body.dark-mode .autocomplete-suggestions div:hover {
-      background: #6b7280;
+      background: #4b5563;
+    }
+    .login-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .login-card {
+      background: #fff;
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 95%;
+    }
+    body.dark-mode .login-card {
+      background: #2d3748;
     }
     @keyframes slideIn {
       from {
@@ -348,7 +371,7 @@
         transform: translate(-50%, -50%) scale(1);
       }
       50% {
-        transform: translate(-50%, -50%) scale(1.05);
+        transform: translate(-50%, -50%) scale(1.1);
       }
       100% {
         transform: translate(-50%, -50%) scale(1);
@@ -356,38 +379,46 @@
     }
     @media (max-width: 768px) {
       .container {
-        padding: 1rem;
+        padding: 1.2rem;
       }
       .grid-cols-4 {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       }
       .card {
-        padding: 1.5rem;
+        padding: 1.8rem;
       }
       table {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
       }
       th, td {
-        padding: 0.75rem;
+        padding: 0.85rem;
       }
       .dashboard-card {
-        padding: 1rem;
-        font-size: 1rem;
+        padding: 1.2rem;
+        font-size: 1.1rem;
       }
       .sidebar {
-        width: 85%;
+        width: 90%;
       }
     }
   </style>
 </head>
 <body>
+  <div id="loginContainer" class="login-container">
+    <div class="login-card">
+      <h2 class="text-2xl font-bold text-center mb-6">تسجيل الدخول</h2>
+      <input id="loginCode" type="password" placeholder="أدخل رمز الدخول" class="mb-4">
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full" onclick="checkLogin()">تسجيل الدخول</button>
+    </div>
+  </div>
   <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
   <div class="sidebar" id="sidebar">
     <div class="flex flex-col gap-4 p-4">
       <h2 class="text-2xl font-bold text-white">إدارة الناخبين</h2>
-      <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="toggleDarkMode()"><i class="fas fa-moon mr-2"></i>الوضع الليلي</button>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="exportSummaryReport()"><i class="fas fa-file-alt mr-2"></i>تقرير مختصر</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="toggleDarkMode()"><i class="fas fa-moon mr-2"></i>الوضع الليلي</button>
+      <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="exportSummaryReport()"><i class="fas fa-file-alt mr-2"></i>تقرير مختصر</button>
       <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" onclick="exportToExcel()"><i class="fas fa-file-excel mr-2"></i>تصدير إلى Excel</button>
+      <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i>تسجيل الخروج</button>
       <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="toggleSidebar()"><i class="fas fa-times mr-2"></i>إغلاق</button>
     </div>
   </div>
@@ -396,27 +427,27 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
       <div class="card text-center">
         <h3 class="text-xl font-semibold"><i class="fas fa-users mr-2"></i>إجمالي الناخبين</h3>
-        <p id="totalVoters" class="text-2xl font-bold text-green-600">0</p>
+        <p id="totalVoters" class="text-2xl font-bold text-blue-600">0</p>
       </div>
       <div class="card text-center">
         <h3 class="text-xl font-semibold"><i class="fas fa-sticky-note mr-2"></i>عدد الملاحظات</h3>
-        <p id="notesCount" class="text-2xl font-bold text-green-600">0</p>
+        <p id="notesCount" class="text-2xl font-bold text-blue-600">0</p>
       </div>
       <div class="card text-center">
         <h3 class="text-xl font-semibold"><i class="fas fa-map-marker-alt mr-2"></i>عدد المناطق</h3>
-        <p id="regionsCount" class="text-2xl font-bold text-green-600">0</p>
+        <p id="regionsCount" class="text-2xl font-bold text-blue-600">0</p>
       </div>
       <div class="card text-center">
         <h3 class="text-xl font-semibold"><i class="fas fa-chart-line mr-2"></i>الإقبال المتوقع</h3>
-        <p id="turnoutPrediction" class="text-2xl font-bold text-green-600">0%</p>
+        <p id="turnoutPrediction" class="text-2xl font-bold text-blue-600">0%</p>
       </div>
     </div>
     <div class="card mb-6">
       <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4" onclick="toggleDashboard()"><i class="fas fa-chart-pie mr-2"></i>عرض/إخفاء توزيع الناخبين</button>
-      <div id="regionDashboard" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="display: none;"></div>
+      <div id="regionDashboard" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style=" mouths display: none;"></div>
     </div>
     <div class="card mb-6">
-      <div class="grid grid-cols-1 md:grid-colsJune 8, 2024 grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="relative">
           <input type="text" id="searchInput" class="border rounded-lg p-2" placeholder="ابحث...">
           <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
@@ -468,7 +499,7 @@
         <h3 class="text-xl font-semibold mb-4"><i class="fas fa-edit mr-2"></i>تعديل بيانات</h3>
         <input id="editTimestamp" type="text" readonly>
         <input id="editName" type="text" placeholder="الاسم">
-        <input id="editPhone" type="text" placeholder="رقم الهاتف (+964)">
+        <input id="editPhone" type="text" placeholder="رقم الهاتف (964+)">
         <input id="editVoterNumber" type="text" placeholder="رقم الناخب">
         <input id="editAddress" type="text" placeholder="العنوان">
         <input id="editNotes" type="text" placeholder="ملاحظات">
@@ -481,7 +512,7 @@
     </div>
     <div id="notification" class="notification"><span id="notificationMessage"></span><span class="close" onclick="closeNotification()">×</span></div>
     <div id="loading" class="loading"><i class="fas fa-spinner fa-spin mr-2"></i>جارٍ التحميل...</div>
-    <a href="https://wa.me/+9647762360338?text=مرحبا، أحتاج إلى مساعدة بخصوص نظام إدارة الناخبين" target="_blank" class="general-whatsapp-btn">
+    <a href="https://wa.me/9647762360338?text=مرحبا، أحتاج إلى مساعدة بخصوص نظام إدارة الناخبين" target="_blank" class="general-whatsapp-btn">
       <i class="fab fa-whatsapp fa-2x"></i>
     </a>
     <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
@@ -491,13 +522,35 @@
     let addressChart, map, markers;
     const keywords = ['مهم', 'عاجل'];
     const baghdadRegions = {
-      'الكرخ': { lat: 33.3152, lng: 44.3661, color: '#10b981' },
-      'الرصافة': { lat: 33.3297, lng: 44.4305, color: '#34d399' },
-      'المنصور': { lat: 33.3178, lng: 44.3472, color: '#6ee7b7' },
+      'الكرخ': { lat: 33.3152, lng: 44.3661, color: '#3b82f6' },
+      'الرصافة': { lat: 33.3297, lng: 44.4305, color: '#60a5fa' },
+      'المنصور': { lat: 33.3178, lng: 44.3472, color: '#93c5fd' },
       'غير محدد': { lat: 33.3152, lng: 44.3661, color: '#6b7280' }
     };
+    let isLoggedIn = false;
+
+    function checkLogin() {
+      const code = DOMPurify.sanitize(document.getElementById('loginCode').value);
+      if (code === 'hasan') {
+        isLoggedIn = true;
+        document.getElementById('loginContainer').style.display = 'none';
+        fetchData();
+        showNotification('تم تسجيل الدخول بنجاح! ✅', 'success');
+      } else {
+        showNotification('رمز الدخول غير صحيح! 🚫', 'error');
+      }
+    }
+
+    function logout() {
+      isLoggedIn = false;
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('loginCode').value = '';
+      toggleSidebar();
+      showNotification('تم تسجيل الخروج! 👋', 'success');
+    }
 
     function toggleSidebar() {
+      if (!isLoggedIn) return;
       document.getElementById('sidebar').classList.toggle('open');
     }
 
@@ -514,17 +567,20 @@
     }
 
     function toggleDarkMode() {
+      if (!isLoggedIn) return;
       document.body.classList.toggle('dark-mode');
       showNotification(document.body.classList.contains('dark-mode') ? 'تم تفعيل الوضع الليلي! 🌙' : 'تم تفعيل الوضع النهاري! ☀️');
     }
 
     function toggleDashboard() {
+      if (!isLoggedIn) return;
       const dashboard = document.getElementById('regionDashboard');
       dashboard.style.display = dashboard.style.display === 'none' ? 'grid' : 'none';
       showNotification(dashboard.style.display === 'grid' ? 'تم عرض لوحة التوزيع! 📊' : 'تم إخفاء لوحة التوزيع! 📊');
     }
 
     function toggleChart() {
+      if (!isLoggedIn) return;
       const chartContainer = document.getElementById('chartContainer');
       chartContainer.classList.toggle('show');
       showNotification(chartContainer.classList.contains('show') ? 'تم عرض الرسم البياني! 📈' : 'تم إخفاء الرسم البياني! 📈');
@@ -533,10 +589,17 @@
     function formatPhoneNumber(phone) {
       if (!phone) return '';
       const clean = phone.replace(/[^\d]/g, '');
-      return clean.length === 10 && !phone.startsWith('+964') ? `+964${clean}` : phone;
+      return clean.length === 10 ? `+964${clean}` : phone;
+    }
+
+    function normalizePhoneForWhatsApp(phone) {
+      if (!phone) return '';
+      const clean = phone.replace(/[^\d]/g, '');
+      return clean.startsWith('964') ? clean : `964${clean}`;
     }
 
     async function fetchData() {
+      if (!isLoggedIn) return;
       document.getElementById('loading').style.display = 'block';
       try {
         const res = await fetch('https://script.google.com/macros/s/AKfycbx5CyfMcuQwGmnQ2NC6xWtQ6-im4iWFr57GK9Sgwbx9CPQrrRcs-OM53zVLfsuGCo0e-g/exec', { cache: 'no-store' });
@@ -621,6 +684,7 @@
       const end = start + rowsPerPage;
       filteredData.slice(start, end).forEach(v => {
         const masked = v.phone.length > 4 ? v.phone.slice(0, -4) + '****' : v.phone;
+        const whatsappNumber = normalizePhoneForWhatsApp(v.phone);
         table.innerHTML += `
           <tr>
             <td>${DOMPurify.sanitize(v.timestamp)}</td>
@@ -631,7 +695,7 @@
             <td>${DOMPurify.sanitize(v.notes || 'لا توجد')}</td>
             <td>
               <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" onclick="openEditModal(${v.row}, '${DOMPurify.sanitize(v.timestamp)}', '${DOMPurify.sanitize(v.name)}', '${DOMPurify.sanitize(v.phone)}', '${DOMPurify.sanitize(v.voterNumber)}', '${DOMPurify.sanitize(v.address)}', '${DOMPurify.sanitize(v.notes)}')"><i class="fas fa-edit"></i></button>
-              <a href="https://wa.me/${DOMPurify.sanitize(v.phone)}?text=مرحبا ${DOMPurify.sanitize(v.name)}، بخصوص الانتخابات..." target="_blank" class="whatsapp-btn inline-block ml-2"><i class="fab fa-whatsapp"></i></a>
+              <a href="https://wa.me/${whatsappNumber}?text=مرحبا ${DOMPurify.sanitize(v.name)}، بخصوص الانتخابات..." target="_blank" class="whatsapp-btn inline-block ml-2"><i class="fab fa-whatsapp"></i></a>
             </td>
           </tr>`;
       });
@@ -653,7 +717,7 @@
         type: 'doughnut',
         data: {
           labels: regions,
-          datasets: [{ data: counts, backgroundColor: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0'], borderColor: '#fff', borderWidth: 2 }]
+          datasets: [{ data: counts, backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'], borderColor: '#fff', borderWidth: 2 }]
         },
         options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 14 } } } } }
       });
@@ -670,7 +734,7 @@
         const lat = coords.lat + (Math.random() - 0.5) * 0.02;
         const lng = coords.lng + (Math.random() - 0.5) * 0.02;
         markers.addLayer(L.circleMarker([lat, lng], {
-          radius: 6,
+          radius: 8,
           fillColor: coords.color,
           color: '#000',
           weight: 1,
@@ -731,6 +795,7 @@
     document.getElementById('nextPage').addEventListener('click', () => { if (currentPage * rowsPerPage < filteredData.length) { currentPage++; populateTable(); } });
 
     function exportSummaryReport() {
+      if (!isLoggedIn) return;
       const regions = [...new Set(votersData.map(v => v.address.split(/[,;]/)[0].trim() || 'غير محدد'))];
       const total = votersData.length;
       const summary = `
@@ -752,6 +817,7 @@ ${regions.map(r => {
     }
 
     function exportToExcel() {
+      if (!isLoggedIn) return;
       const headers = ['طابع زمني', 'الاسم', 'رقم الهاتف', 'رقم الناخب', 'العنوان', 'ملاحظات'];
       const data = votersData.map(v => [
         v.timestamp,
@@ -762,6 +828,7 @@ ${regions.map(r => {
         v.notes
       ]);
       const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+      ws['!cols'] = headers.map(() => ({ wch: 20 }));
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'الناخبين');
       XLSX.write(wb, `voters_data_${new Date().toISOString().slice(0, 10)}.xlsx`);
@@ -769,6 +836,7 @@ ${regions.map(r => {
     }
 
     function openEditModal(row, timestamp, name, phone, voterNumber, address, notes) {
+      if (!isLoggedIn) return;
       document.getElementById('editRow').value = row;
       document.getElementById('editTimestamp').value = DOMPurify.sanitize(timestamp);
       document.getElementById('editName').value = DOMPurify.sanitize(name);
@@ -784,6 +852,7 @@ ${regions.map(r => {
     }
 
     async function confirmSaveEdit() {
+      if (!isLoggedIn) return;
       document.getElementById('loading').style.display = 'block';
       try {
         const phone = formatPhoneNumber(DOMPurify.sanitize(document.getElementById('editPhone').value.trim()));
@@ -814,6 +883,7 @@ ${regions.map(r => {
     }
 
     async function generateAIReport() {
+      if (!isLoggedIn) return;
       document.getElementById('loading').style.display = 'block';
       try {
         const notesStats = {}, keywordStats = {};
@@ -871,8 +941,6 @@ ${regions.map(r => {
         backToTop.classList.remove('show');
       }
     });
-
-    fetchData();
   </script>
 </body>
 </html>
