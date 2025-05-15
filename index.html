@@ -7,75 +7,86 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.7/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
-      background: #f1f5f9;
+      font-family: 'Noto Sans Arabic', sans-serif;
+      background: linear-gradient(135deg, #047857, #10b981);
       min-height: 100vh;
       margin: 0;
-      color: #1e293b;
+      color: #1f2937;
       transition: all 0.3s ease;
     }
     body.dark-mode {
-      background: #1e293b;
-      color: #e2e8f0;
+      background: linear-gradient(135deg, #1f2937, #4b5563);
+      color: #d1d5db;
     }
     body.dark-mode .bg-white {
-      background: #2d3748;
+      background: #374151;
+    }
+    body.dark-mode .text-gray-800 {
+      color: #d1d5db;
     }
     .sidebar {
-      width: 300px;
-      background: #1e40af;
+      width: 280px;
+      background: rgba(16, 185, 129, 0.95);
       position: fixed;
       top: 0;
       right: 0;
       height: 100%;
       padding: 2rem;
-      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+      box-shadow: -6px 0 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
+      transform: translateX(100%);
       transition: transform 0.3s ease;
     }
-    .sidebar.hidden {
-      transform: translateX(100%);
+    .sidebar.open {
+      transform: translateX(0);
     }
-    .main-content {
-      margin-right: 320px;
-      padding: 2rem;
-      transition: margin-right 0.3s ease;
+    .sidebar-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 1100;
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .sidebar.hidden ~ .main-content {
-      margin-right: 0;
+    .sidebar-toggle:hover {
+      background: #059669;
     }
     .container {
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
+      padding: 2rem;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 2rem;
     }
     .card {
       background: #fff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       transition: transform 0.3s, box-shadow 0.3s;
     }
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
     body.dark-mode .card {
-      background: #2d3748;
+      background: #4b5563;
     }
     .modal {
       position: fixed;
@@ -83,7 +94,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       display: none;
       align-items: center;
       justify-content: center;
@@ -94,14 +105,14 @@
     }
     .modal-content {
       background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 600px;
+      padding: 2.5rem;
+      border-radius: 16px;
+      max-width: 700px;
       width: 95%;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     }
     body.dark-mode .modal-content {
-      background: #2d3748;
+      background: #4b5563;
     }
     input, select {
       padding: 0.75rem;
@@ -117,9 +128,9 @@
       outline: none;
     }
     body.dark-mode input, body.dark-mode select {
-      background: #4b5563;
+      background: #6b7280;
       color: #fff;
-      border-color: #6b7280;
+      border-color: #9ca3af;
     }
     button {
       padding: 0.75rem 1.5rem;
@@ -151,26 +162,26 @@
       z-index: 10;
     }
     body.dark-mode th {
-      background: #4b5563;
+      background: #6b7280;
     }
     tr:hover {
       background: #f3f4f6;
     }
     body.dark-mode tr:hover {
-      background: #374151;
+      background: #4b5563;
     }
     #map {
       height: 500px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
     .notification {
       position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      padding: 1rem;
+      top: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: none;
       animation: slideIn 0.3s ease;
@@ -189,7 +200,7 @@
     }
     .notification .close {
       cursor: pointer;
-      margin-left: 0.75rem;
+      margin-left: 1rem;
       font-weight: bold;
     }
     .loading {
@@ -200,31 +211,47 @@
       transform: translate(-50%, -50%);
       background: rgba(0, 0, 0, 0.85);
       color: #fff;
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: 12px;
       z-index: 1000;
       animation: pulse 1.5s infinite;
     }
     .dashboard-card {
-      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      background: linear-gradient(135deg, #10b981, #34d399);
       color: #fff;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 1.5rem;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
     }
     .dashboard-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     }
     body.dark-mode .dashboard-card {
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      background: linear-gradient(135deg, #047857, #10b981);
     }
-    .mini-chart {
-      height: 60px;
-      margin-top: 0.5rem;
+    .dashboard-card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #34d399;
+      border-radius: 4px;
+      margin-top: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      background: #6ee7b7;
+      width: var(--progress);
+      transition: width 1s ease;
     }
     .whatsapp-btn {
       background: #25D366;
@@ -239,28 +266,29 @@
     }
     .general-whatsapp-btn {
       position: fixed;
-      bottom: 1.5rem;
-      left: 1.5rem;
+      bottom: 2rem;
+      left: 2rem;
       background: #25D366;
       color: #fff;
-      padding: 1rem;
+      padding: 1.25rem;
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
     .general-whatsapp-btn:hover {
       transform: scale(1.1);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
     }
     .back-to-top {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      background: #1e40af;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10b981;
       color: #fff;
-      padding: 0.75rem;
+      padding: 1rem;
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       display: none;
       transition: opacity 0.3s, transform 0.3s;
@@ -280,17 +308,30 @@
     .chart-container.show {
       max-height: 500px;
     }
-    .notification-log {
+    .autocomplete-suggestions {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
       max-height: 200px;
       overflow-y: auto;
-      margin-top: 1rem;
-      padding: 0.5rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      z-index: 1000;
+      width: calc(100% - 1rem);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .notification-log p {
-      margin: 0.5rem 0;
-      font-size: 0.9rem;
+    .autocomplete-suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .autocomplete-suggestions div:hover {
+      background: #f3f4f6;
+    }
+    body.dark-mode .autocomplete-suggestions {
+      background: #4b5563;
+      border-color: #6b7280;
+    }
+    body.dark-mode .autocomplete-suggestions div:hover {
+      background: #6b7280;
     }
     @keyframes slideIn {
       from {
@@ -313,196 +354,141 @@
         transform: translate(-50%, -50%) scale(1);
       }
     }
-    @media (max-width: 1024px) {
-      .sidebar {
-        width: 250px;
-      }
-      .main-content {
-        margin-right: 270px;
-      }
-      .sidebar.hidden ~ .main-content {
-        margin-right: 0;
-      }
-    }
     @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        transform: translateX(100%);
-      }
-      .sidebar.hidden {
-        transform: translateX(100%);
-      }
-      .main-content {
-        margin-right: 0;
-        padding: 1rem;
-      }
       .container {
-        gap: 1rem;
+        padding: 1rem;
       }
       .grid-cols-4 {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       }
       .card {
-        padding: 1rem;
+        padding: 1.5rem;
       }
       table {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
       th, td {
         padding: 0.75rem;
+      }
+      .dashboard-card {
+        padding: 1rem;
+        font-size: 1rem;
+      }
+      .sidebar {
+        width: 85%;
       }
     }
   </style>
 </head>
 <body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
   <div class="sidebar" id="sidebar">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 p-4">
       <h2 class="text-2xl font-bold text-white">إدارة الناخبين</h2>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="toggleSidebar()"><i class="fas fa-bars mr-2"></i>إخفاء القائمة</button>
       <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="toggleDarkMode()"><i class="fas fa-moon mr-2"></i>الوضع الليلي</button>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="openAddVoterModal()"><i class="fas fa-user-plus mr-2"></i>إضافة ناخب</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="exportSummaryReport()"><i class="fas fa-file-alt mr-2"></i>تقرير مختصر</button>
       <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" onclick="exportToExcel()"><i class="fas fa-file-excel mr-2"></i>تصدير إلى Excel</button>
-      <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700" onclick="exportToPDF()"><i class="fas fa-file-pdf mr-2"></i>تصدير إلى PDF</button>
-      <button class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i>تسجيل الخروج</button>
-      <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700" onclick="toggleAutoRefresh()">
-        <i class="fas fa-sync-alt mr-2"></i>
-        <span id="autoRefreshText">إيقاف التحديث التلقائي</span>
-      </button>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="refreshData()">
-        <i class="fas fa-redo-alt mr-2"></i>تحديث البيانات يدويًا
-      </button>
-      <div class="notification-log">
-        <h3 class="text-sm font-semibold text-white">سجل الإشعارات</h3>
-        <div id="notificationLog"></div>
-      </div>
+      <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="toggleSidebar()"><i class="fas fa-times mr-2"></i>إغلاق</button>
     </div>
   </div>
-  <div class="main-content">
-    <div class="container">
-      <h1 class="text-4xl font-bold text-center my-6 text-blue-900 dark:text-blue-300">إدارة الناخبين - بغداد</h1>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="card text-center">
-          <h3 class="text-lg font-semibold"><i class="fas fa-users mr-2"></i>إجمالي الناخبين</h3>
-          <p id="totalVoters" class="text-2xl font-bold text-blue-600">0</p>
-          <canvas id="votersMiniChart" class="mini-chart"></canvas>
-        </div>
-        <div class="card text-center">
-          <h3 class="text-lg font-semibold"><i class="fas fa-sticky-note mr-2"></i>عدد الملاحظات</h3>
-          <p id="notesCount" class="text-2xl font-bold text-blue-600">0</p>
-          <canvas id="notesMiniChart" class="mini-chart"></canvas>
-        </div>
-        <div class="card text-center">
-          <h3 class="text-lg font-semibold"><i class="fas fa-map-marker-alt mr-2"></i>عدد المناطق</h3>
-          <p id="regionsCount" class="text-2xl font-bold text-blue-600">0</p>
-          <canvas id="regionsMiniChart" class="mini-chart"></canvas>
-        </div>
-        <div class="card text-center">
-          <h3 class="text-lg font-semibold"><i class="fas fa-chart-line mr-2"></i>الإقبال المتوقع</h3>
-          <p id="turnoutPrediction" class="text-2xl font-bold text-blue-600">0%</p>
-          <canvas id="turnoutMiniChart" class="mini-chart"></canvas>
-        </div>
+  <div class="container">
+    <h1 class="text-4xl font-bold text-center my-8 text-white drop-shadow-lg">إدارة الناخبين - بغداد</h1>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div class="card text-center">
+        <h3 class="text-xl font-semibold"><i class="fas fa-users mr-2"></i>إجمالي الناخبين</h3>
+        <p id="totalVoters" class="text-2xl font-bold text-green-600">0</p>
       </div>
-      <div class="card mb-6">
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4" onclick="toggleDashboard()"><i class="fas fa-chart-pie mr-2"></i>عرض/إخفاء توزيع الناخبين</button>
-        <div id="regionDashboard" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="display: none;"></div>
+      <div class="card text-center">
+        <h3 class="text-xl font-semibold"><i class="fas fa-sticky-note mr-2"></i>عدد الملاحظات</h3>
+        <p id="notesCount" class="text-2xl font-bold text-green-600">0</p>
       </div>
-      <div class="card mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input type="text" id="searchInput" class="border rounded-lg p-2" placeholder="ابحث...">
-          <select id="addressFilter" class="border rounded-lg p-2"><option value="">جميع المناطق</option></select>
-          <select id="notesFilter" class="border rounded-lg p-2">
-            <option value="">جميع الملاحظات</option>
-            <option value="غير فارغ">ملاحظات موجودة</option>
-            <option value="فارغ">بدون ملاحظات</option>
-            <option value="مهم">ملاحظات مهمة</option>
-            <option value="عاجل">ملاحظات عاجلة</option>
-          </select>
-          <input type="date" id="dateFilter" class="border rounded-lg p-2" placeholder="تصفية حسب التاريخ">
-        </div>
+      <div class="card text-center">
+        <h3 class="text-xl font-semibold"><i class="fas fa-map-marker-alt mr-2"></i>عدد المناطق</h3>
+        <p id="regionsCount" class="text-2xl font-bold text-green-600">0</p>
       </div>
-      <div class="card mb-6">
-        <table>
-          <thead>
-            <tr>
-              <th>طابع زمني</th>
-              <th>الاسم</th>
-              <th>رقم الهاتف</th>
-              <th>رقم الناخب</th>
-              <th>العنوان</th>
-              <th>ملاحظات</th>
-              <th>إجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="votersTable"></tbody>
-        </table>
-        <div class="mt-4 flex justify-center gap-4">
-          <button id="prevPage" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"><i class="fas fa-chevron-right"></i>السابق</button>
-          <button id="nextPage" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400">التالي<i class="fas fa-chevron-left"></i></button>
-        </div>
+      <div class="card text-center">
+        <h3 class="text-xl font-semibold"><i class="fas fa-chart-line mr-2"></i>الإقبال المتوقع</h3>
+        <p id="turnoutPrediction" class="text-2xl font-bold text-green-600">0%</p>
       </div>
-      <div class="card mb-6">
-        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-chart-pie mr-2"></i>توزيع الناخبين حسب المنطقة</h3>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4" onclick="toggleChart()"><i class="fas fa-eye mr-2"></i>عرض/إخفاء الرسم البياني</button>
-        <div id="chartContainer" class="chart-container">
-          <canvas id="addressChart"></canvas>
-        </div>
-      </div>
-      <div class="card mb-6">
-        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-map-marked-alt mr-2"></i>مواقع الناخبين</h3>
-        <div id="map"></div>
-      </div>
-      <div id="editModal" class="modal">
-        <div class="modal-content">
-          <h3 class="text-xl font-semibold mb-4"><i class="fas fa-edit mr-2"></i>تعديل بيانات</h3>
-          <input id="editTimestamp" type="text" readonly>
-          <input id="editName" type="text" placeholder="الاسم">
-          <input id="editPhone" type="text" placeholder="رقم الهاتف (+964)">
-          <input id="editVoterNumber" type="text" placeholder="رقم الناخب">
-          <input id="editAddress" type="text" placeholder="العنوان">
-          <input id="editNotes" type="text" placeholder="ملاحظات">
-          <input id="editRow" type="hidden">
-          <div class="flex justify-end gap-4">
-            <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeEditModal()">إلغاء</button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="confirmSaveEdit()">حفظ</button>
-          </div>
-        </div>
-      </div>
-      <div id="addVoterModal" class="modal">
-        <div class="modal-content">
-          <h3 class="text-xl font-semibold mb-4"><i class="fas fa-user-plus mr-2"></i>إضافة ناخب جديد</h3>
-          <input id="addName" type="text" placeholder="الاسم">
-          <input id="addPhone" type="text" placeholder="رقم الهاتف (+964)">
-          <input id="addVoterNumber" type="text" placeholder="رقم الناخب">
-          <input id="addAddress" type="text" placeholder="العنوان">
-          <input id="addNotes" type="text" placeholder="ملاحظات">
-          <div class="flex justify-end gap-4">
-            <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeAddVoterModal()">إلغاء</button>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="addVoter()">إضافة</button>
-          </div>
-        </div>
-      </div>
-      <div id="loginModal" class="modal">
-        <div class="modal-content">
-          <h3 class="text-xl font-semibold mb-4"><i class="fas fa-sign-in-alt mr-2"></i>تسجيل الدخول</h3>
-          <input id="username" type="text" placeholder="اسم المستخدم">
-          <input id="password" type="password" placeholder="كلمة المرور">
-          <div class="flex justify-end gap-4">
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="login()">دخول</button>
-          </div>
-        </div>
-      </div>
-      <div id="notification" class="notification"><span id="notificationMessage"></span><span class="close" onclick="closeNotification()">×</span></div>
-      <div id="loading" class="loading"><i class="fas fa-spinner fa-spin mr-2"></i>جارٍ التحميل...</div>
-      <a href="https://wa.me/+964123456789?text=مرحبا، أحتاج إلى مساعدة بخصوص نظام إدارة الناخبين" target="_blank" class="general-whatsapp-btn">
-        <i class="fab fa-whatsapp fa-2x"></i>
-      </a>
-      <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
     </div>
+    <div class="card mb-6">
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4" onclick="toggleDashboard()"><i class="fas fa-chart-pie mr-2"></i>عرض/إخفاء توزيع الناخبين</button>
+      <div id="regionDashboard" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="display: none;"></div>
+    </div>
+    <div class="card mb-6">
+      <div class="grid grid-cols-1 md:grid-colsJune 8, 2024 grid-cols-4 gap-4">
+        <div class="relative">
+          <input type="text" id="searchInput" class="border rounded-lg p-2" placeholder="ابحث...">
+          <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
+        </div>
+        <select id="addressFilter" class="border rounded-lg p-2"><option value="">جميع المناطق</option></select>
+        <select id="notesFilter" class="border rounded-lg p-2">
+          <option value="">جميع الملاحظات</option>
+          <option value="غير فارغ">ملاحظات موجودة</option>
+          <option value="فارغ">بدون ملاحظات</option>
+          <option value="مهم">ملاحظات مهمة</option>
+          <option value="عاجل">ملاحظات عاجلة</option>
+        </select>
+        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="generateAIReport()"><i class="fas fa-brain mr-2"></i>تقرير ذكي</button>
+      </div>
+    </div>
+    <div class="card mb-6">
+      <table>
+        <thead>
+          <tr>
+            <th>طابع زمني</th>
+            <th>الاسم</th>
+            <th>رقم الهاتف</th>
+            <th>رقم الناخب</th>
+            <th>العنوان</th>
+            <th>ملاحظات</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="votersTable"></tbody>
+      </table>
+      <div class="mt-4 flex justify-center gap-4">
+        <button id="prevPage" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"><i class="fas fa-chevron-right"></i>السابق</button>
+        <button id="nextPage" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400">التالي<i class="fas fa-chevron-left"></i></button>
+      </div>
+    </div>
+    <div class="card mb-6">
+      <h3 class="text-xl font-semibold mb-4"><i class="fas fa-chart-pie mr-2"></i>توزيع الناخبين حسب المنطقة</h3>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4" onclick="toggleChart()"><i class="fas fa-eye mr-2"></i>عرض/إخفاء الرسم البياني</button>
+      <div id="chartContainer" class="chart-container">
+        <canvas id="addressChart"></canvas>
+      </div>
+    </div>
+    <div class="card mb-6">
+      <h3 class="text-xl font-semibold mb-4"><i class="fas fa-map-marked-alt mr-2"></i>مواقع الناخبين</h3>
+      <div id="map"></div>
+    </div>
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-edit mr-2"></i>تعديل بيانات</h3>
+        <input id="editTimestamp" type="text" readonly>
+        <input id="editName" type="text" placeholder="الاسم">
+        <input id="editPhone" type="text" placeholder="رقم الهاتف (+964)">
+        <input id="editVoterNumber" type="text" placeholder="رقم الناخب">
+        <input id="editAddress" type="text" placeholder="العنوان">
+        <input id="editNotes" type="text" placeholder="ملاحظات">
+        <input id="editRow" type="hidden">
+        <div class="flex justify-end gap-4">
+          <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeEditModal()">إلغاء</button>
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="confirmSaveEdit()">حفظ</button>
+        </div>
+      </div>
+    </div>
+    <div id="notification" class="notification"><span id="notificationMessage"></span><span class="close" onclick="closeNotification()">×</span></div>
+    <div id="loading" class="loading"><i class="fas fa-spinner fa-spin mr-2"></i>جارٍ التحميل...</div>
+    <a href="https://wa.me/+9647762360338?text=مرحبا، أحتاج إلى مساعدة بخصوص نظام إدارة الناخبين" target="_blank" class="general-whatsapp-btn">
+      <i class="fab fa-whatsapp fa-2x"></i>
+    </a>
+    <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
   </div>
   <script>
     let votersData = [], filteredData = [], currentPage = 1, rowsPerPage = 10;
-    let addressChart, map, markers, notificationLog = [];
-    let isFetching = false; // حالة لتتبع عمليات جلب البيانات
+    let addressChart, map, markers;
     const keywords = ['مهم', 'عاجل'];
     const baghdadRegions = {
       'الكرخ': { lat: 33.3152, lng: 44.3661, color: '#10b981' },
@@ -510,14 +496,9 @@
       'المنصور': { lat: 33.3178, lng: 44.3472, color: '#6ee7b7' },
       'غير محدد': { lat: 33.3152, lng: 44.3661, color: '#6b7280' }
     };
-    const DATA_CACHE_KEY = 'votersDataCache';
-    const CACHE_EXPIRY = 5 * 60 * 1000; // 5 دقائق
-    const AUTO_REFRESH_INTERVAL = 10 * 60 * 1000; // 10 دقائق
-    let isAutoRefreshEnabled = true; // التحديث التلقائي مفعل افتراضيًا
-    const { jsPDF } = window.jspdf;
 
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('hidden');
+      document.getElementById('sidebar').classList.toggle('open');
     }
 
     function showNotification(msg, type = 'success') {
@@ -526,13 +507,6 @@
       n.className = `notification ${type}`;
       n.style.display = 'flex';
       setTimeout(() => n.style.display = 'none', 5000);
-      notificationLog.push({ message: msg, type, timestamp: new Date().toLocaleString('ar-EG') });
-      updateNotificationLog();
-    }
-
-    function updateNotificationLog() {
-      const logDiv = document.getElementById('notificationLog');
-      logDiv.innerHTML = notificationLog.slice(-5).map(log => `<p class="${log.type}">${log.timestamp}: ${DOMPurify.sanitize(log.message)}</p>`).join('');
     }
 
     function closeNotification() {
@@ -556,189 +530,38 @@
       showNotification(chartContainer.classList.contains('show') ? 'تم عرض الرسم البياني! 📈' : 'تم إخفاء الرسم البياني! 📈');
     }
 
-    function toggleAutoRefresh() {
-      isAutoRefreshEnabled = !isAutoRefreshEnabled;
-      document.getElementById('autoRefreshText').textContent = isAutoRefreshEnabled ? 'إيقاف التحديث التلقائي' : 'تفعيل التحديث التلقائي';
-      showNotification(isAutoRefreshEnabled ? 'تم تفعيل التحديث التلقائي! 🔄' : 'تم إيقاف التحديث التلقائي! ⏸️');
-    }
-
     function formatPhoneNumber(phone) {
       if (!phone) return '';
       const clean = phone.replace(/[^\d]/g, '');
       return clean.length === 10 && !phone.startsWith('+964') ? `+964${clean}` : phone;
     }
 
-    function checkLogin() {
-      const user = localStorage.getItem('user');
-      if (!user) {
-        document.getElementById('loginModal').classList.add('show');
-        isAutoRefreshEnabled = false; // إيقاف التحديث التلقائي عند عدم تسجيل الدخول
-        return false;
-      }
-      return true;
-    }
-
-    function login() {
-      const username = DOMPurify.sanitize(document.getElementById('username').value);
-      const password = DOMPurify.sanitize(document.getElementById('password').value);
-      if (username && password) {
-        localStorage.setItem('user', username);
-        document.getElementById('loginModal').classList.remove('show');
-        isAutoRefreshEnabled = true; // تفعيل التحديث التلقائي بعد تسجيل الدخول
-        fetchData();
-        showNotification('تم تسجيل الدخول بنجاح! ✅', 'success');
-      } else {
-        showNotification('يرجى إدخال اسم المستخدم وكلمة المرور! 🚫', 'error');
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('user');
-      localStorage.removeItem(DATA_CACHE_KEY);
-      localStorage.removeItem(`${DATA_CACHE_KEY}_timestamp`);
-      isAutoRefreshEnabled = false; // إيقاف التحديث التلقائي عند تسجيل الخروج
-      document.getElementById('loginModal').classList.add('show');
-      showNotification('تم تسجيل الخروج! 👋', 'warning');
-    }
-
-    async function fetchDataWithRetry(url, retries = 3, delay = 1000) {
-      for (let i = 0; i < retries; i++) {
-        try {
-          const res = await fetch(url, { cache: 'no-store' });
-          if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-          const data = await res.json();
-          return data;
-        } catch (e) {
-          if (i < retries - 1) {
-            await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i))); // تأخير متزايد
-            continue;
-          }
-          throw e;
-        }
-      }
-    }
-
-    function validateData(data) {
-      if (!Array.isArray(data)) {
-        throw new Error('البيانات ليست مصفوفة!');
-      }
-      if (data.length <= 1) {
-        throw new Error('لا توجد بيانات ناخبين!');
-      }
-      const firstRow = data[1];
-      if (!firstRow || firstRow.length < 6) {
-        throw new Error('تنسيق البيانات غير صحيح! يجب أن يحتوي كل صف على 6 أعمدة على الأقل.');
-      }
-      return true;
-    }
-
-    async function fetchData(page = 1, pageSize = 100) {
-      if (!checkLogin() || isFetching) return; // منع التحديث إذا كان هناك عملية جلب أو لم يسجل الدخول
-      isFetching = true;
+    async function fetchData() {
       document.getElementById('loading').style.display = 'block';
-
-      const cachedData = localStorage.getItem(DATA_CACHE_KEY);
-      const cacheTimestamp = localStorage.getItem(`${DATA_CACHE_KEY}_timestamp`);
-      const now = new Date().getTime();
-
-      if (cachedData && cacheTimestamp && (now - parseInt(cacheTimestamp) < CACHE_EXPIRY)) {
-        try {
-          votersData = JSON.parse(cachedData);
-          filteredData = [...votersData];
-          updateStats();
-          populateTable();
-          populateFilters();
-          updateRegionDashboard();
-          updateCharts();
-          updateMiniCharts();
-          initMap();
-          showNotification('تم تحميل البيانات من التخزين المؤقت! ⚡', 'success');
-          isFetching = false;
-          document.getElementById('loading').style.display = 'none';
-          return;
-        } catch (e) {
-          showNotification('خطأ في تحميل البيانات المخزنة مؤقتًا! 🔄', 'warning');
-        }
-      }
-
       try {
-        const url = `https://script.google.com/macros/s/AKfycbx5CyfMcuQwGmnQ2NC6xWtQ6-im4iWFr57GK9Sgwbx9CPQrrRcs-OM53zVLfsuGCo0e-g/exec?page=${page}&pageSize=${pageSize}`;
-        const data = await fetchDataWithRetry(url);
-
-        validateData(data);
-
-        votersData = data.slice(1).map((row, i) => {
-          const timestamp = String(row[0] || new Date().toISOString()).trim();
-          const name = String(row[1] || 'غير محدد').trim();
-          const phone = formatPhoneNumber(String(row[2] || '')).trim();
-          const voterNumber = String(row[3] || 'غير محدد').trim();
-          const address = String(row[4] || 'غير محدد').trim();
-          const notes = String(row[5] || '').trim();
-
-          return {
-            timestamp,
-            name,
-            phone,
-            voterNumber,
-            address,
-            notes,
-            row: i + 2
-          };
-        });
-
-        localStorage.setItem(DATA_CACHE_KEY, JSON.stringify(votersData));
-        localStorage.setItem(`${DATA_CACHE_KEY}_timestamp`, now.toString());
-
+        const res = await fetch('https://script.google.com/macros/s/AKfycbx5CyfMcuQwGmnQ2NC6xWtQ6-im4iWFr57GK9Sgwbx9CPQrrRcs-OM53zVLfsuGCo0e-g/exec', { cache: 'no-store' });
+        const data = await res.json();
+        votersData = data.slice(1).map((row, i) => ({
+          timestamp: String(row[0] || '').trim(),
+          name: String(row[1] || '').trim(),
+          phone: formatPhoneNumber(String(row[2] || '').trim()),
+          voterNumber: String(row[3] || '').trim(),
+          address: String(row[4] || 'غير محدد').trim(),
+          notes: String(row[5] || '').trim(),
+          row: i + 2
+        }));
         filteredData = [...votersData];
         updateStats();
         populateTable();
         populateFilters();
         updateRegionDashboard();
         updateCharts();
-        updateMiniCharts();
         initMap();
         showNotification('تم جلب البيانات بنجاح! ✅', 'success');
       } catch (e) {
-        let errorMessage = 'خطأ في جلب البيانات! 🚫';
-        if (e.message.includes('HTTP error')) {
-          errorMessage = `فشل الاتصال بالخادم: ${e.message}`;
-        } else if (e.message.includes('تنسيق البيانات')) {
-          errorMessage = `خطأ في تنسيق البيانات: ${e.message}`;
-        } else if (e.message.includes('لا توجد بيانات')) {
-          errorMessage = 'لم يتم العثور على بيانات الناخبين! 🚫';
-        } else {
-          errorMessage = `خطأ غير متوقع: ${e.message}`;
-        }
-        showNotification(errorMessage, 'error');
-        console.error('Fetch Data Error:', e);
+        showNotification('خطأ في جلب البيانات! 🚫', 'error');
       }
-      isFetching = false;
       document.getElementById('loading').style.display = 'none';
-    }
-
-    function refreshData() {
-      localStorage.removeItem(DATA_CACHE_KEY);
-      localStorage.removeItem(`${DATA_CACHE_KEY}_timestamp`);
-      fetchData();
-      showNotification('جارٍ تحديث البيانات! 🔄', 'warning');
-    }
-
-    // دالة التحديث التلقائي المحسنة
-    function startAutoRefresh() {
-      setInterval(async () => {
-        if (isAutoRefreshEnabled && !isFetching && checkLogin()) {
-          try {
-            await refreshData();
-            showNotification('تم التحديث التلقائي بنجاح! 🔄', 'success');
-          } catch (e) {
-            showNotification('فشل التحديث التلقائي: ' + e.message + ' 🚫', 'error');
-            // تأخير إضافي قبل المحاولة التالية في حالة الفشل
-            await new Promise(resolve => setTimeout(resolve, 30000)); // 30 ثانية
-          }
-        }
-      }, AUTO_REFRESH_INTERVAL);
     }
 
     function updateStats() {
@@ -750,31 +573,6 @@
         return sum + parseFloat(predictVoterTurnoutForRegion(region));
       }, 0) / votersData.length;
       document.getElementById('turnoutPrediction').textContent = `${avgTurnout.toFixed(2)}%`;
-    }
-
-    function updateMiniCharts() {
-      const regions = [...new Set(votersData.map(v => v.address.split(/[,;]/)[0].trim() || 'غير محدد'))];
-      const counts = regions.map(r => votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r).length);
-      new Chart(document.getElementById('votersMiniChart'), {
-        type: 'line',
-        data: { labels: regions, datasets: [{ data: counts, borderColor: '#10b981', fill: false }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-      });
-      new Chart(document.getElementById('notesMiniChart'), {
-        type: 'bar',
-        data: { labels: ['ملاحظات', 'بدون'], datasets: [{ data: [votersData.filter(v => v.notes.trim() !== '').length, votersData.filter(v => v.notes.trim() === '').length], backgroundColor: '#10b981' }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-      });
-      new Chart(document.getElementById('regionsMiniChart'), {
-        type: 'doughnut',
-        data: { labels: regions, datasets: [{ data: counts, backgroundColor: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0'] }] },
-        options: { plugins: { legend: { display: false } } }
-      });
-      new Chart(document.getElementById('turnoutMiniChart'), {
-        type: 'line',
-        data: { labels: regions, datasets: [{ data: regions.map(r => predictVoterTurnoutForRegion(r)), borderColor: '#10b981', fill: false }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-      });
     }
 
     function getRegionIcon(count, total) {
@@ -793,16 +591,17 @@
       const total = votersData.length;
       const dashboard = document.getElementById('regionDashboard');
       dashboard.innerHTML = '';
-      regions.forEach(r => {
+      regions.forEach((r, i) => {
         const count = votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r).length;
         const p = total ? ((count / total) * 100).toFixed(2) : 0;
         const icon = getRegionIcon(count, total);
         dashboard.innerHTML += `
           <div class="dashboard-card" onclick="focusOnRegion('${DOMPurify.sanitize(r)}')">
-            <i class="${icon} text-2xl mb-2"></i>
+            <i class="${icon} icon"></i>
             <h4 class="text-lg font-semibold">${DOMPurify.sanitize(r)}</h4>
             <p class="text-xl font-bold">${count}</p>
             <p class="text-sm">(${p}%)</p>
+            <div class="progress-bar" style="--progress: ${p}%"></div>
           </div>`;
       });
     }
@@ -832,7 +631,7 @@
             <td>${DOMPurify.sanitize(v.notes || 'لا توجد')}</td>
             <td>
               <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" onclick="openEditModal(${v.row}, '${DOMPurify.sanitize(v.timestamp)}', '${DOMPurify.sanitize(v.name)}', '${DOMPurify.sanitize(v.phone)}', '${DOMPurify.sanitize(v.voterNumber)}', '${DOMPurify.sanitize(v.address)}', '${DOMPurify.sanitize(v.notes)}')"><i class="fas fa-edit"></i></button>
-              <a href="https://wa.me/${DOMPurify.sanitize(v.phone)}?text=مرحبا ${DOMPurify.sanitize(v.voterNumber)}، بخصوص الانتخابات..." target="_blank" class="whatsapp-btn inline-block ml-2"><i class="fab fa-whatsapp"></i></a>
+              <a href="https://wa.me/${DOMPurify.sanitize(v.phone)}?text=مرحبا ${DOMPurify.sanitize(v.name)}، بخصوص الانتخابات..." target="_blank" class="whatsapp-btn inline-block ml-2"><i class="fab fa-whatsapp"></i></a>
             </td>
           </tr>`;
       });
@@ -854,7 +653,7 @@
         type: 'doughnut',
         data: {
           labels: regions,
-          datasets: [{ data: counts, backgroundColor: ['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd'], borderColor: '#fff', borderWidth: 2 }]
+          datasets: [{ data: counts, backgroundColor: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0'], borderColor: '#fff', borderWidth: 2 }]
         },
         options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 14 } } } } }
       });
@@ -885,10 +684,8 @@
       const search = DOMPurify.sanitize(document.getElementById('searchInput').value.toLowerCase());
       const region = DOMPurify.sanitize(document.getElementById('addressFilter').value);
       const notes = DOMPurify.sanitize(document.getElementById('notesFilter').value);
-      const date = DOMPurify.sanitize(document.getElementById('dateFilter').value);
       filteredData = votersData.filter(v => {
         const r = v.address.split(/[,;]/)[0].trim() || 'غير محدد';
-        const timestampDate = new Date(v.timestamp).toISOString().split('T')[0];
         return (
           (v.name.toLowerCase().includes(search) || v.phone.includes(search) || v.voterNumber.includes(search)) &&
           (region === '' || r === region) &&
@@ -896,8 +693,7 @@
            (notes === 'غير فارغ' && v.notes.trim() !== '') ||
            (notes === 'فارغ' && v.notes.trim() === '') ||
            (notes === 'مهم' && v.notes.toLowerCase().includes('مهم')) ||
-           (notes === 'عاجل' && v.notes.toLowerCase().includes('عاجل'))) &&
-          (date === '' || timestampDate === date)
+           (notes === 'عاجل' && v.notes.toLowerCase().includes('عاجل')))
         );
       });
       currentPage = 1;
@@ -905,14 +701,55 @@
       updateRegionDashboard();
       updateCharts();
       initMap();
+      updateAutocompleteSuggestions(search);
+    }
+
+    function updateAutocompleteSuggestions(search) {
+      const suggestionsDiv = document.getElementById('autocompleteSuggestions');
+      if (!search) {
+        suggestionsDiv.classList.add('hidden');
+        return;
+      }
+      const suggestions = votersData
+        .filter(v => v.name.toLowerCase().includes(search) || v.voterNumber.includes(search))
+        .map(v => v.name)
+        .slice(0, 5);
+      suggestionsDiv.innerHTML = suggestions.map(s => `<div onclick="selectSuggestion('${DOMPurify.sanitize(s)}')">${DOMPurify.sanitize(s)}</div>`).join('');
+      suggestionsDiv.classList.toggle('hidden', suggestions.length === 0);
+    }
+
+    function selectSuggestion(value) {
+      document.getElementById('searchInput').value = value;
+      document.getElementById('autocompleteSuggestions').classList.add('hidden');
+      filterTable();
     }
 
     document.getElementById('searchInput').addEventListener('input', filterTable);
     document.getElementById('addressFilter').addEventListener('change', filterTable);
     document.getElementById('notesFilter').addEventListener('change', filterTable);
-    document.getElementById('dateFilter').addEventListener('change', filterTable);
     document.getElementById('prevPage').addEventListener('click', () => { if (currentPage > 1) { currentPage--; populateTable(); } });
     document.getElementById('nextPage').addEventListener('click', () => { if (currentPage * rowsPerPage < filteredData.length) { currentPage++; populateTable(); } });
+
+    function exportSummaryReport() {
+      const regions = [...new Set(votersData.map(v => v.address.split(/[,;]/)[0].trim() || 'غير محدد'))];
+      const total = votersData.length;
+      const summary = `
+تقرير مختصر - بغداد (${new Date().toLocaleString('ar-EG')}):
+- إجمالي الناخبين: ${total}
+- عدد المناطق: ${regions.length}
+- توزيع حسب المناطق:
+${regions.map(r => {
+  const count = votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r).length;
+  return `  - ${r}: ${count} (${total ? ((count / total) * 100).toFixed(2) : 0}%)`;
+}).join('\n')}
+      `;
+      const blob = new Blob([summary], { type: 'text/plain;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `summary_${new Date().toISOString().slice(0, 10)}.txt`;
+      link.click();
+      showNotification('تم تصدير التقرير المختصر! 📝', 'success');
+    }
 
     function exportToExcel() {
       const headers = ['طابع زمني', 'الاسم', 'رقم الهاتف', 'رقم الناخب', 'العنوان', 'ملاحظات'];
@@ -929,30 +766,6 @@
       XLSX.utils.book_append_sheet(wb, ws, 'الناخبين');
       XLSX.write(wb, `voters_data_${new Date().toISOString().slice(0, 10)}.xlsx`);
       showNotification('تم تصدير البيانات إلى Excel! 📊', 'success');
-    }
-
-    function exportToPDF() {
-      const doc = new jsPDF();
-      doc.setFont('Amiri');
-      doc.setFontSize(16);
-      doc.text('تقرير الناخبين - بغداد', 105, 20, { align: 'center' });
-      doc.setFontSize(12);
-      const regions = [...new Set(votersData.map(v => v.address.split(/[,;]/)[0].trim() || 'غير محدد'))];
-      const total = votersData.length;
-      let y = 30;
-      doc.text(`إجمالي الناخبين: ${total}`, 10, y);
-      y += 10;
-      doc.text(`عدد المناطق: ${regions.length}`, 10, y);
-      y += 10;
-      doc.text('توزيع حسب المناطق:', 10, y);
-      y += 10;
-      regions.forEach(r => {
-        const count = votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r).length;
-        doc.text(`- ${r}: ${count} (${total ? ((count / total) * 100).toFixed(2) : 0}%)`, 20, y);
-        y += 10;
-      });
-      doc.save(`voters_report_${new Date().toISOString().slice(0, 10)}.pdf`);
-      showNotification('تم تصدير التقرير إلى PDF! 📄', 'success');
     }
 
     function openEditModal(row, timestamp, name, phone, voterNumber, address, notes) {
@@ -1000,39 +813,48 @@
       document.getElementById('loading').style.display = 'none';
     }
 
-    function openAddVoterModal() {
-      document.getElementById('addVoterModal').classList.add('show');
-    }
-
-    function closeAddVoterModal() {
-      document.getElementById('addVoterModal').classList.remove('show');
-    }
-
-    async function addVoter() {
+    async function generateAIReport() {
       document.getElementById('loading').style.display = 'block';
       try {
-        const phone = formatPhoneNumber(DOMPurify.sanitize(document.getElementById('addPhone').value.trim()));
-        if (phone && !phone.match(/^\+964[0-9]{9}$/)) throw new Error('رقم هاتف غير صالح!');
-        const data = {
-          action: 'add',
-          timestamp: new Date().toISOString(),
-          name: DOMPurify.sanitize(document.getElementById('addName').value),
-          phone,
-          voterNumber: DOMPurify.sanitize(document.getElementById('addVoterNumber').value),
-          address: DOMPurify.sanitize(document.getElementById('addAddress').value),
-          notes: DOMPurify.sanitize(document.getElementById('addNotes').value)
-        };
-        const res = await fetch('https://script.google.com/macros/s/AKfycbwoAqCR5PDtftYAtreKF4T90zCqtOPUyqOcAeDEdla-Lsfcj3ET32knqrFNBrYmyPes7Q/exec', {
-          method: 'POST',
-          body: JSON.stringify(data)
+        const notesStats = {}, keywordStats = {};
+        keywords.forEach(k => keywordStats[k] = 0);
+        votersData.forEach(v => {
+          const note = v.notes.trim() || 'بدون ملاحظات';
+          notesStats[note] = (notesStats[note] || 0) + 1;
+          keywords.forEach(k => { if (v.notes.toLowerCase().includes(k)) keywordStats[k]++; });
         });
-        const result = await res.json();
-        if (result.error) throw new Error(result.error);
-        showNotification('تم إضافة الناخب بنجاح! ✅', 'success');
-        closeAddVoterModal();
-        fetchData();
+        const regions = [...new Set(votersData.map(v => v.address.split(/[,;]/)[0].trim() || 'غير محدد'))];
+        const lowVoterRegions = regions.filter(r => {
+          const count = votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r).length;
+          return count < (votersData.length / regions.length) * 0.5;
+        });
+        const highNotesRegions = regions.filter(r => {
+          const notesCount = votersData.filter(v => (v.address.split(/[,;]/)[0].trim() || 'غير محدد') === r && v.notes.trim() !== '').length;
+          return notesCount > (votersData.length / regions.length) * 0.3;
+        });
+        const summary = `
+تقرير ذكي - بغداد (${new Date().toLocaleString('ar-EG')}):
+- إجمالي الناخبين: ${votersData.length}
+- عدد الملاحظات: ${votersData.filter(v => v.notes.trim() !== '').length}
+- الكلمات المفتاحية:
+  ${keywords.map(k => `- "${k}": ${keywordStats[k]}`).join('\n')}
+- مناطق ذات عدد منخفض: ${lowVoterRegions.join(', ') || 'لا توجد'}
+- مناطق ذات ملاحظات عالية: ${highNotesRegions.join(', ') || 'لا توجد'}
+- التوصيات:
+  1. تذكيرات للناخبين بدون ملاحظات (${notesStats['بدون ملاحظات'] || 0}).
+  2. توعية في المناطق المنخفضة (${lowVoterRegions.join(', ') || 'غير متوفر'}).
+  3. متابعة الملاحظات المهمة/العاجلة (${keywordStats['مهم'] + keywordStats['عاجل']}).
+  4. حملات توعية في المناطق ذات الملاحظات (${highNotesRegions.join(', ') || 'غير متوفر'}).
+  5. تحليل الإقبال المنخفض (${regions.filter(r => predictVoterTurnoutForRegion(r) < 60).join(', ') || 'غير متوفر'}).
+        `;
+        const blob = new Blob([summary], { type: 'text/plain;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `ai_report_${new Date().toISOString().slice(0, 10)}.txt`;
+        link.click();
+        showNotification('تم إنشاء التقرير الذكي بنجاح! 🧠', 'success');
       } catch (e) {
-        showNotification('خطأ في إضافة الناخب: ' + e.message + ' 🚫', 'error');
+        showNotification('خطأ في إنشاء التقرير: ' + e.message + ' 🚫', 'error');
       }
       document.getElementById('loading').style.display = 'none';
     }
@@ -1050,9 +872,7 @@
       }
     });
 
-    // تشغيل التحديث التلقائي عند تحميل الصفحة
-    checkLogin();
-    startAutoRefresh();
+    fetchData();
   </script>
 </body>
 </html>
